@@ -1,8 +1,8 @@
 # Port for the server to listen on
-port: 3011
+port: 3012
 hostname: localhost
 
-stashWebhookPath: '/stash-webhook'
+bitbucketWebhookPath: '/bitbucket-webhook'
 
 # Settings for the API or Container Manager server
 # port
@@ -11,10 +11,10 @@ api:
   token: "token2"
 
 providers:
-  "stash:http://localhost:7990":
+  "bitbucket:http://localhost:7990":
     url: "http://localhost:7990"
-    type: stash
-    consumerKey: "stash.local.key"
+    type: bitbucket
+    consumerKey: "bitbucket.local.key"
     consumerSecret: |
       -----BEGIN RSA PRIVATE KEY-----
       MIICXQIBAAKBgQCmxWGi4EA3JGYN6PUSer961SpbPdiyNjjqLn0zEWttUjRmkExt
