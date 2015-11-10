@@ -2,10 +2,10 @@ var util = require('util');
 var request = require('request');
 var should = require('should');
 
-var StashHandler = require('../lib/StashHandler');
+var BitbucketHandler = require('../lib/BitbucketHandler');
 
 var config = {
-  stashWebhookPath: '/stash',
+  bitbucketWebhookPath: '/bitbucket',
   port: 0,
   api: {
     url: "http://localhost:3000",
@@ -13,7 +13,7 @@ var config = {
   },
   log_level: Number.POSITIVE_INFINITY  // disable logging
 }
-var handler_server = new StashHandler(config);
+var handler_server = new BitbucketHandler(config);
 
 // mock out API calls
 var nocked = {};
@@ -28,7 +28,7 @@ function init_nock(){
 
   var project = {
     id: '1234',
-    service: "stash",
+    service: "bitbucket",
     owner: "zanchin",
     repo: "testrepo",
     slug: "zanchin/testrepo"
@@ -47,7 +47,7 @@ function init_nock(){
 
   // nock out API URLs
   nocked['project_search'] = nock(config.api.url)
-    .get("/projects?service=stash&slug=zanchin%2Ftestrepo&single=true")
+    .get("/projects?service=bitbucket&slug=zanchin%2Ftestrepo&single=true")
     .reply(200, project);
 
   nocked['startbuild'] = nock(config.api.url)
@@ -64,11 +64,11 @@ function init_nock(){
       "context": "ci/tests"
     });
 
-  // nock out stash URLs
+  // nock out bitbucket URLs
   var nocks = nock.load('./test/http_capture.json');
   nocks.forEach(function(n, i){
     if(i != 2){
-      nocked['stash_' + i] = n;
+      nocked['bitbucket_' + i] = n;
     }
   });
 
@@ -96,11 +96,11 @@ function http(path, handler){
 }
 
 describe.only("webhooks", function(){
-  before("start StashHandler server", function(done){
+  before("start BitbucketHandler server", function(done){
     handler_server.start(done);
   });
 
-  after("stop StashHandler server", function(done){
+  after("stop BitbucketHandler server", function(done){
     handler_server.stop(done);
 
     // var nockCallObjects = nock.recorder.play();
@@ -118,7 +118,7 @@ describe.only("webhooks", function(){
       var payload = require('./push_payload');
       var headers = {}
 
-      http(config.stashWebhookPath)
+      http(config.bitbucketWebhookPath)
       .post({body: payload, headers: headers}, function _(err, res, body){
         // handles push by returning OK and doing nothing else
         body.should.eql({ok: true});
@@ -135,7 +135,7 @@ describe.only("webhooks", function(){
       // fire off handler event
       var event = {
         event: 'UPDATE',
-        url: '/stash',
+        url: '/bitbucket',
         payload: payload
       };
       handler_server.pushHandler(event, function(err, build){
@@ -148,7 +148,7 @@ describe.only("webhooks", function(){
             id: "1234",
             owner: "TEST",
             repo: "testrepo",
-            service: "stash",
+            service: "bitbucket",
             slug: "TEST/testrepo"
           }
         });
@@ -179,7 +179,7 @@ describe("status update endpoint", function(){
   }
 
   before("start another handler", function(done){
-    handler = new StashHandler(config);
+    handler = new BitbucketHandler(config);
     handler.start(function(){
       nock.enableNetConnect(handler.server.url.replace("http://", ''));
       done();
@@ -187,7 +187,7 @@ describe("status update endpoint", function(){
   });
 
   it("accepts /update", function(done){
-    var mocked = mock(handler, 'postStatusToStash', function _(project, ref, status, cb/*(err)*/){
+    var mocked = mock(handler, 'postStatusToBitbucket', function _(project, ref, status, cb/*(err)*/){
       // no-op
       mocked.reset();
       cb();
@@ -208,7 +208,7 @@ describe("status update endpoint", function(){
 
       project: {
         id: '1234',
-        service: "stash",
+        service: "bitbucket",
         owner: "zanchin",
         repo: "testrepo",
         slug: "zanchin/testrepo"
@@ -227,7 +227,7 @@ describe("status update endpoint", function(){
   });
 
   it("accepts /builds/:bid/status/:context", function(done){
-    var mocked = mock(handler, 'postStatusToStash', function _(project, ref, status, cb/*(err)*/){
+    var mocked = mock(handler, 'postStatusToBitbucket', function _(project, ref, status, cb/*(err)*/){
       // no-op
       mocked.reset();
       cb();
@@ -248,7 +248,7 @@ describe("status update endpoint", function(){
 
       project: {
         id: '1234',
-        service: "stash",
+        service: "bitbucket",
         owner: "zanchin",
         repo: "testrepo",
         slug: "zanchin/testrepo"
