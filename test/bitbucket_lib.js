@@ -6,7 +6,7 @@ var Bitbucket = require('../lib/bitbucket');
 var bitbucket_config = {
   url: "http://localhost:7990",
   auth: {
-    type: 'oauth1',
+    type: 'oauth2',
     "token": "8MICHnQVgO1s20OIbdLj8zBbqrtJeNa9" ,
     "tokenSecret": "HNlSuswv1IYPeUO7HIIV0nJlPTRRTwed",
     "consumerKey": "bitbucket.local.key",
@@ -21,15 +21,15 @@ var nocker = require('./__nocker');
 
 before(function(){
   // play (nock out bitbucket URLs):
-  var nocks = nocker.play('./test/bitbucket_capture.json');
+  //var nocks = nocker.play('./test/bitbucket_capture.json');
 
   // // record:
-  // nocker.record();
+  nocker.record();
 });
 
 after("stop BitbucketHandler server", function(){
   // stop recording:
-  // nocker.stop("./test/bitbucket_capture.json");
+  nocker.stop("./test/bitbucket_capture.json");
 });
 
 
