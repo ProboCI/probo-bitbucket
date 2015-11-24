@@ -3,6 +3,8 @@ port: 3012
 hostname: localhost
 
 bitbucketWebhookPath: '/bitbucket-webhook'
+bitbucketKey: 'CHANGE-ME'
+bitbucketSecret: 'CHANGE-ME'
 
 # Settings for the API or Container Manager server
 # port
