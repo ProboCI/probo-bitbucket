@@ -8,11 +8,11 @@ var config = {
   bitbucketWebhookPath: '/bitbucket',
   port: 0,
   api: {
-    url: "http://localhost:3000",
-    token: "token2"
+    url: 'http://localhost:3000',
+    token: 'token2'
   },
   log_level: Number.POSITIVE_INFINITY  // disable logging
-}
+};
 var handler_server = new BitbucketHandler(config);
 
 // mock out API calls
@@ -20,7 +20,7 @@ var nocked = {};
 var required_nocks = [];
 
 var nock = require('nock');
-function init_nock(){
+function init_nock() {
   //nock.enableNetConnect();
 
   nocked = {};
@@ -28,54 +28,54 @@ function init_nock(){
 
   var project = {
     id: '1234',
-    service: "bitbucket",
-    owner: "zanchin",
-    repo: "testrepo",
-    slug: "zanchin/testrepo"
-  }
+    service: 'bitbucket',
+    owner: 'zanchin',
+    repo: 'testrepo',
+    slug: 'zanchin/testrepo'
+  };
 
   var build = {
-    id: "build1",
-    projectId: "123",
-    sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
+    id: 'build1',
+    projectId: '123',
+    sha: '9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
     project: project
-  }
+  };
 
   // nock out handler server - pass these requests through
-  nock.enableNetConnect(handler_server.server.url.replace("http://", ''));
+  nock.enableNetConnect(handler_server.server.url.replace('http://', ''));
 
 
   // nock out API URLs
   nocked['project_search'] = nock(config.api.url)
-    .get("/projects?service=bitbucket&slug=zanchin%2Ftestrepo&single=true")
+    .get('/projects?service=bitbucket&slug=zanchin%2Ftestrepo&single=true')
     .reply(200, project);
 
   nocked['startbuild'] = nock(config.api.url)
-    .post("/startbuild")
+    .post('/startbuild')
     .reply(200, build);
 
   nocked['status_update'] = nock(config.api.url)
     .persist()
     .filteringPath(/status\/[^/]*/g, 'status/context')
-    .post("/builds/" + build.id + "/status/context")
+    .post('/builds/' + build.id + '/status/context')
     .reply(200, {
-      "state": "success",
-      "description": "Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)",
-      "context": "ci/tests"
+      'state': 'success',
+      'description': 'Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)',
+      'context': 'ci/tests'
     });
 
   // nock out bitbucket URLs
   var nocks = nock.load('./test/http_capture.json');
-  nocks.forEach(function(n, i){
-    if(i != 2){
+  nocks.forEach(function(n, i) {
+    if (i !== 2) {
       nocked['bitbucket_' + i] = n;
     }
   });
 
-  Object.keys(nocked).filter(function(name){
-    var excluded = ["status_update"];
+  Object.keys(nocked).filter(function(name) {
+    var excluded = ['status_update'];
     return excluded.indexOf(name) < 0;
-  }).forEach(function(name){
+  }).forEach(function(name) {
     required_nocks.push(nocked[name]);
   });
 
@@ -85,22 +85,22 @@ function init_nock(){
   // });
 }
 
-function http(path, handler){
+function http(path, handler) {
   handler = handler || handler_server;
   var options = {
-    url: util.format("%s%s", handler.server.url, path),
+    url: util.format('%s%s', handler.server.url, path),
     json: true
   };
 
   return request.defaults(options);
 }
 
-describe.only("webhooks", function(){
-  before("start BitbucketHandler server", function(done){
+describe.only('webhooks', function() {
+  before('start BitbucketHandler server', function(done) {
     handler_server.start(done);
   });
 
-  after("stop BitbucketHandler server", function(done){
+  after('stop BitbucketHandler server', function(done) {
     handler_server.stop(done);
 
     // var nockCallObjects = nock.recorder.play();
@@ -108,28 +108,28 @@ describe.only("webhooks", function(){
   });
 
 
-  describe.only("push", function(){
-    beforeEach("nock out network calls", function(){
+  describe.only('push', function() {
+    beforeEach('nock out network calls', function() {
       nock.cleanAll();
       init_nock();
     });
 
-    it("is routed", function(done){
+    it('is routed', function(done) {
       var payload = require('./push_payload');
-      var headers = {}
+      var headers = {};
 
       http(config.bitbucketWebhookPath)
-      .post({body: payload, headers: headers}, function _(err, res, body){
+      .post({body: payload, headers: headers}, function _(err, res, body) {
         // handles push by returning OK and doing nothing else
         body.should.eql({ok: true});
         should.not.exist(err);
 
-        done()
+        done();
       });
     });
 
 
-    it("is handled", function(done){
+    it('is handled', function(done) {
       var payload = require('./push_payload');
 
       // fire off handler event
@@ -138,18 +138,18 @@ describe.only("webhooks", function(){
         url: '/bitbucket',
         payload: payload
       };
-      handler_server.pushHandler(event, function(err, build){
+      handler_server.pushHandler(event, function(err, build) {
         should.not.exist(err);
         build.should.eql({
-          id: "build1",
-          projectId: "1234",
-          sha: "383e221f3f407055bd252c774df4ecdc1a04ed6e",
+          id: 'build1',
+          projectId: '1234',
+          sha: '383e221f3f407055bd252c774df4ecdc1a04ed6e',
           project: {
-            id: "1234",
-            owner: "TEST",
-            repo: "testrepo",
-            service: "bitbucket",
-            slug: "TEST/testrepo"
+            id: '1234',
+            owner: 'TEST',
+            repo: 'testrepo',
+            service: 'bitbucket',
+            slug: 'TEST/testrepo'
           }
         });
 
@@ -164,108 +164,108 @@ describe.only("webhooks", function(){
   });
 });
 
-describe("status update endpoint", function(){
+describe('status update endpoint', function() {
   var handler;
 
-  function mock(obj, attr_name, new_attr){
+  function mock(obj, attr_name, new_attr) {
     var orig = obj[attr_name];
     obj[attr_name] = new_attr;
 
-    function reset(){
+    function reset() {
       obj[attr_name] = orig;
     }
 
     return {value: orig, reset: reset};
   }
 
-  before("start another handler", function(done){
+  before('start another handler', function(done) {
     handler = new BitbucketHandler(config);
-    handler.start(function(){
-      nock.enableNetConnect(handler.server.url.replace("http://", ''));
+    handler.start(function() {
+      nock.enableNetConnect(handler.server.url.replace('http://', ''));
       done();
     });
   });
 
-  it("accepts /update", function(done){
-    var mocked = mock(handler, 'postStatusToBitbucket', function _(project, ref, status, cb/*(err)*/){
+  it('accepts /update', function(done) {
+    var mocked = mock(handler, 'postStatusToBitbucket', function _(project, ref, status, cb/*(err)*/) {
       // no-op
       mocked.reset();
       cb();
     });
 
     var update = {
-      state: "pending",
-      description: "Environment built!",
-      context: "ci/env",
-      target_url: "http://my_url.com"
+      state: 'pending',
+      description: 'Environment built!',
+      context: 'ci/env',
+      target_url: 'http://my_url.com'
     };
 
     var build = {
-      projectId: "123",
+      projectId: '123',
 
       status: 'success',
-      ref: "d0fdf6c2d2b5e7402985f1e720aa27e40d018194",
+      ref: 'd0fdf6c2d2b5e7402985f1e720aa27e40d018194',
 
       project: {
         id: '1234',
-        service: "bitbucket",
-        owner: "zanchin",
-        repo: "testrepo",
-        slug: "zanchin/testrepo"
+        service: 'bitbucket',
+        owner: 'zanchin',
+        repo: 'testrepo',
+        slug: 'zanchin/testrepo'
       }
-    }
+    };
 
-    http("/update", handler).post({body: {
+    http('/update', handler).post({body: {
       update: update,
       build: build
-    }}, function _(err, res, body){
+    }}, function _(err, res, body) {
       should.not.exist(err);
-      body.should.eql(update)
+      body.should.eql(update);
 
       done(err);
     });
   });
 
-  it("accepts /builds/:bid/status/:context", function(done){
-    var mocked = mock(handler, 'postStatusToBitbucket', function _(project, ref, status, cb/*(err)*/){
+  it('accepts /builds/:bid/status/:context', function(done) {
+    var mocked = mock(handler, 'postStatusToBitbucket', function _(project, ref, status, cb/*(err)*/) {
       // no-op
       mocked.reset();
       cb();
     });
 
     var update = {
-      state: "pending",
-      description: "Environment built!",
+      state: 'pending',
+      description: 'Environment built!',
       context: 'ignored context',
-      target_url: "http://my_url.com"
+      target_url: 'http://my_url.com'
     };
 
     var build = {
-      projectId: "123",
+      projectId: '123',
 
       status: 'success',
-      ref: "d0fdf6c2d2b5e7402985f1e720aa27e40d018194",
+      ref: 'd0fdf6c2d2b5e7402985f1e720aa27e40d018194',
 
       project: {
         id: '1234',
-        service: "bitbucket",
-        owner: "zanchin",
-        repo: "testrepo",
-        slug: "zanchin/testrepo"
+        service: 'bitbucket',
+        owner: 'zanchin',
+        repo: 'testrepo',
+        slug: 'zanchin/testrepo'
       }
-    }
+    };
 
-    http("/builds/" + build.id + "/status/" + "ci-env", handler).post({body: {
+    http('/builds/' + build.id + '/status/' + 'ci-env', handler).post({body: {
       update: update,
       build: build
-    }}, function _(err, res, body){
+    }}, function _(err, res, body) {
       should.not.exist(err);
       body.should.eql({
-        state: "pending",
-        description: "Environment built!",
+        state: 'pending',
+        description: 'Environment built!',
         context: 'ci-env',  // NOTE context gets inserted from URL
-        target_url: "http://my_url.com"
-      })
+        target_url: 'http://my_url.com'
+      });
 
       done(err);
     });
