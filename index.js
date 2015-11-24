@@ -1,12 +1,11 @@
-var path = require('path'),
-    util = require('util'),
-    fs = require('fs');
+var path = require('path');
+var util = require('util');
 
 var Loader = require('yaml-config-loader');
 var yargs = require('yargs');
 var loader = new Loader();
 
-loader.on('error', function(error){
+loader.on('error', function(error) {
   if (error.name === 'YAMLException') {
     console.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
     console.log(error);

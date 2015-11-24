@@ -7,7 +7,6 @@ var exports = function() {
   this.yargs = null;
 };
 
-var config = {};
 var server = {};
 
 exports.shortDescription = 'Runs a webhook handler and sends updates to bitbucket status API.';
@@ -31,12 +30,11 @@ exports.options = function(yargs) {
 };
 
 exports.configure = function(config) {
-  config = config;
   server = new BitbucketHandler(config);
 };
 
 exports.run = function(cb) {
   server.start();
-}
+};
 
 module.exports = exports;
