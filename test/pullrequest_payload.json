@@ -1,0 +1,155 @@
+{
+  "repository": {
+    "owner": {
+      "display_name": "zanchin",
+      "links": {
+        "html": {
+          "href": "https://bitbucket.org/zanchin/"
+        },
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/users/zanchin"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/zanchin/avatar/32/"
+        }
+      },
+      "type": "user",
+      "uuid": "{80331edf-633e-417c-a309-6d743142b61a}",
+      "username": "zanchin"
+    },
+    "links": {
+      "html": {
+        "href": "https://bitbucket.org/zanchin/test-repo"
+      },
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo"
+      },
+      "avatar": {
+        "href": "https://bitbucket.org/zanchin/test-repo/avatar/32/"
+      }
+    },
+    "full_name": "zanchin/test-repo",
+    "name": "test repo",
+    "scm": "git",
+    "type": "repository",
+    "uuid": "{70f6355b-afb3-4ea2-b3a7-616142ae5800}",
+    "is_private": true
+  },
+  "actor": {
+    "display_name": "zanchin",
+    "links": {
+      "html": {
+        "href": "https://bitbucket.org/zanchin/"
+      },
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/users/zanchin"
+      },
+      "avatar": {
+        "href": "https://bitbucket.org/account/zanchin/avatar/32/"
+      }
+    },
+    "type": "user",
+    "uuid": "{80331edf-633e-417c-a309-6d743142b61a}",
+    "username": "zanchin"
+  },
+  "pullrequest": {
+    "author": {
+      "display_name": "zanchin",
+      "links": {
+        "html": {
+          "href": "https://bitbucket.org/zanchin/"
+        },
+        "self": {
+          "href": "https://api.bitbucket.org/2.0/users/zanchin"
+        },
+        "avatar": {
+          "href": "https://bitbucket.org/account/zanchin/avatar/32/"
+        }
+      },
+      "type": "user",
+      "uuid": "{80331edf-633e-417c-a309-6d743142b61a}",
+      "username": "zanchin"
+    },
+    "links": {
+      "html": {
+        "href": "https://bitbucket.org/zanchin/test-repo/pull-requests/1"
+      },
+      "self": {
+        "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/pullrequests/1"
+      }
+    },
+    "closed_by": null,
+    "source": {
+      "commit": {
+        "hash": "71016380d9eb",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/71016380d9eb"
+          }
+        }
+      },
+      "repository": {
+        "links": {
+          "html": {
+            "href": "https://bitbucket.org/zanchin/test-repo"
+          },
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/zanchin/test-repo/avatar/32/"
+          }
+        },
+        "type": "repository",
+        "uuid": "{70f6355b-afb3-4ea2-b3a7-616142ae5800}",
+        "full_name": "zanchin/test-repo",
+        "name": "test repo"
+      },
+      "branch": {
+        "name": "pr1-branch"
+      }
+    },
+    "destination": {
+      "commit": {
+        "hash": "56a2d2240cbd",
+        "links": {
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/56a2d2240cbd"
+          }
+        }
+      },
+      "repository": {
+        "links": {
+          "html": {
+            "href": "https://bitbucket.org/zanchin/test-repo"
+          },
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/zanchin/test-repo/avatar/32/"
+          }
+        },
+        "type": "repository",
+        "uuid": "{70f6355b-afb3-4ea2-b3a7-616142ae5800}",
+        "full_name": "zanchin/test-repo",
+        "name": "test repo"
+      },
+      "branch": {
+        "name": "master"
+      }
+    },
+    "merge_commit": null,
+    "id": 1,
+    "updated_on": "2015-11-25T02:00:00.562283+00:00",
+    "reason": "",
+    "close_source_branch": true,
+    "title": "Tue Nov 24 11:39:33 EST 2015",
+    "state": "OPEN",
+    "description": "",
+    "created_on": "2015-11-24T16:39:50.567797+00:00",
+    "type": "pullrequest",
+    "reviewers": [],
+    "participants": []
+  }
+}
