@@ -12,6 +12,7 @@
   "author": "",
   "license": "Proprietary",
   "dependencies": {
+    "async": "^1.5.0",
     "bluebird": "^2.10.0",
     "bunyan": "^1.4.0",
     "js-yaml": "^3.3.1",
