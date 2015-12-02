@@ -1,3 +1,5 @@
+'use strict';
+
 var BitbucketHandler = require('./lib/BitbucketHandler');
 
 var exports = function() {

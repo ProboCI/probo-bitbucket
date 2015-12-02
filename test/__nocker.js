@@ -1,10 +1,12 @@
+'use strict';
+
 var nock = require('nock');
 
 var nocker = {
   record: function() {
     nock.recorder.rec({
       output_objects: true,
-      dont_print: true
+      dont_print: true,
     });
   },
 
@@ -17,9 +19,8 @@ var nocker = {
   play: function(filename) {
     console.log('loading captured network calls as JSON from', filename);
 
-    var nocks = nock.load(filename);
-    return nocks;
-  }
+    return nock.load(filename);
+  },
 };
 
 module.exports = nocker;

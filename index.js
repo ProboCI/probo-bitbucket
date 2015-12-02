@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path');
 var util = require('util');
 
@@ -24,7 +26,7 @@ loader.addAndNormalizeObject(process.env);
 
 if (argv.config) {
   if (typeof argv.config === 'string') {
-    argv.config = [ argv.config ];
+    argv.config = [argv.config];
   }
   for (var i in argv.config) {
     loader.add(path.resolve(argv.config[i]));
@@ -38,7 +40,7 @@ if (executor.options) {
   var setOptions = {};
   var key = null;
   for (key in yargs.argv) {
-    if (yargs.argv[key] != undefined) {
+    if (yargs.argv[key] !== undefined) {
       setOptions[key] = yargs.argv[key];
     }
   }
