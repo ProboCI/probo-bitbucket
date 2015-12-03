@@ -5,8 +5,8 @@ hostname: localhost
 bbWebhookUrl: '/bitbucket-webhook'
 # Bitbucket client key and client secret. These are generated for you
 # when you create a new OAuth client in Bitbucket
-# bitbucketKey: null
-# bitbucketSecret: null
+# bbClientKey: null
+# bbClientSecret: null
 
 # Settings for the API or Container Manager server
 # port
