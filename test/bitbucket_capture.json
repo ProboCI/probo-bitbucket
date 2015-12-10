@@ -1,325 +1,188 @@
 [
   {
-    "scope": "http://localhost:7990",
-    "method": "GET",
-    "path": "/rest/api/1.0/repos?limit=100&permission=REPO_ADMIN",
-    "body": "",
-    "status": 200,
-    "response": {
-      "size": 2,
-      "limit": 100,
-      "isLastPage": true,
-      "values": [
-        {
-          "slug": "peronalrepo",
-          "id": 11,
-          "name": "peronalrepo",
-          "scmId": "git",
-          "state": "AVAILABLE",
-          "statusMessage": "Available",
-          "forkable": true,
-          "project": {
-            "key": "~ILYA",
-            "id": 2,
-            "name": "ilya",
-            "type": "PERSONAL",
-            "owner": {
-              "name": "ilya",
-              "emailAddress": "ilya+stash@bluenexa.com",
-              "id": 1,
-              "displayName": "ilya",
-              "active": true,
-              "slug": "ilya",
-              "type": "NORMAL",
-              "link": {
-                "url": "/users/ilya",
-                "rel": "self"
-              },
-              "links": {
-                "self": [
-                  {
-                    "href": "http://localhost:7990/users/ilya"
-                  }
-                ]
-              }
-            },
-            "link": {
-              "url": "/users/ilya",
-              "rel": "self"
-            },
-            "links": {
-              "self": [
-                {
-                  "href": "http://localhost:7990/users/ilya"
-                }
-              ]
-            }
-          },
-          "public": false,
-          "link": {
-            "url": "/users/ilya/repos/peronalrepo/browse",
-            "rel": "self"
-          },
-          "cloneUrl": "http://ilya@localhost:7990/scm/~ilya/peronalrepo.git",
-          "links": {
-            "clone": [
-              {
-                "href": "http://ilya@localhost:7990/scm/~ilya/peronalrepo.git",
-                "name": "http"
-              },
-              {
-                "href": "ssh://git@localhost:7999/~ilya/peronalrepo.git",
-                "name": "ssh"
-              }
-            ],
-            "self": [
-              {
-                "href": "http://localhost:7990/users/ilya/repos/peronalrepo/browse"
-              }
-            ]
-          }
-        },
-        {
-          "slug": "testrepo",
-          "id": 1,
-          "name": "testrepo",
-          "scmId": "git",
-          "state": "AVAILABLE",
-          "statusMessage": "Available",
-          "forkable": true,
-          "project": {
-            "key": "TEST",
-            "id": 1,
-            "name": "test project",
-            "description": "this is the project description",
-            "public": false,
-            "type": "NORMAL",
-            "link": {
-              "url": "/projects/TEST",
-              "rel": "self"
-            },
-            "links": {
-              "self": [
-                {
-                  "href": "http://localhost:7990/projects/TEST"
-                }
-              ]
-            }
-          },
-          "public": false,
-          "link": {
-            "url": "/projects/TEST/repos/testrepo/browse",
-            "rel": "self"
-          },
-          "cloneUrl": "http://ilya@localhost:7990/scm/test/testrepo.git",
-          "links": {
-            "clone": [
-              {
-                "href": "http://ilya@localhost:7990/scm/test/testrepo.git",
-                "name": "http"
-              },
-              {
-                "href": "ssh://git@localhost:7999/test/testrepo.git",
-                "name": "ssh"
-              }
-            ],
-            "self": [
-              {
-                "href": "http://localhost:7990/projects/TEST/repos/testrepo/browse"
-              }
-            ]
-          }
-        }
-      ],
-      "start": 0
-    },
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3800x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME,Accept-Encoding",
-      "transfer-encoding": "chunked",
-      "content-type": "application/json;charset=UTF-8",
-      "x-content-type-options": "nosniff",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
-  },
-  {
-    "scope": "http://localhost:7990",
-    "method": "GET",
-    "path": "/rest/api/1.0/projects/TEST/repos/testrepo/browse/.proviso.yml",
-    "body": "",
-    "status": 200,
-    "response": {
-      "lines": [
-        {
-          "text": "image: lepew/ubuntu-14.04-lamp"
-        },
-        {
-          "text": "# Eventual TODO"
-        },
-        {
-          "text": "# provisioner: bash"
-        },
-        {
-          "text": "# bash_config:"
-        },
-        {
-          "text": "#   command: drush site-install minimal"
-        },
-        {
-          "text": "# Eventual TODO"
-        },
-        {
-          "text": "# provisioner: drush"
-        },
-        {
-          "text": "# drush_config:"
-        },
-        {
-          "text": "#    profile: minimal"
-        },
-        {
-          "text": "provisioner: fetcher"
-        },
-        {
-          "text": "fetcher_config:"
-        },
-        {
-          "text": "  # Any option from https://github.com/tizzo/fetcher/blob/7.x-1.x/KEYS.txt is valid here."
-        },
-        {
-          "text": "  name: awesome"
-        },
-        {
-          "text": "  environment.remote: dev"
-        },
-        {
-          "text": "  info_fetcher.class: 'FetcherServices\\InfoFetcher\\FetcherServices'"
-        },
-        {
-          "text": "  info_fetcher.config:"
-        },
-        {
-          "text": "    host: 'https://extranet.zivtech.com'"
-        }
-      ],
-      "start": 0,
-      "size": 17,
-      "isLastPage": true
-    },
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3801x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME, X-AUSERID, Cookie",
-      "x-content-type-options": "nosniff",
-      "set-cookie": [
-        "JSESSIONID=9036335B2F00CB031C45D73102AFD788; Path=/; HttpOnly"
-      ],
-      "content-type": "application/json;charset=UTF-8",
-      "content-length": "736",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
-  },
-  {
-    "scope": "http://localhost:7990",
-    "method": "GET",
-    "path": "/rest/api/1.0/projects/TEST/repos/testrepo/browse/",
-    "body": "",
-    "status": 200,
-    "response": {
-      "path": {
-        "components": [],
-        "name": "",
-        "toString": ""
-      },
-      "revision": "refs/heads/master",
-      "children": {
-        "size": 2,
-        "limit": 500,
-        "isLastPage": true,
-        "values": [
-          {
-            "path": {
-              "components": [
-                ".proviso.yml"
-              ],
-              "parent": "",
-              "name": ".proviso.yml",
-              "extension": "yml",
-              "toString": ".proviso.yml"
-            },
-            "contentId": "b60c7cc8d2b690ca0143e74bc6d6d5337d98930f",
-            "type": "FILE"
-          },
-          {
-            "path": {
-              "components": [
-                "file"
-              ],
-              "parent": "",
-              "name": "file",
-              "toString": "file"
-            },
-            "contentId": "f73f3093ff865c514c6c51f867e35f693487d0d3",
-            "type": "FILE"
-          }
-        ],
-        "start": 0
-      }
-    },
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3802x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME,Accept-Encoding",
-      "transfer-encoding": "chunked",
-      "content-type": "application/json;charset=UTF-8",
-      "x-content-type-options": "nosniff",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
-  },
-  {
-    "scope": "http://localhost:7990",
+    "scope": "http://0.0.0.0:54814",
     "method": "POST",
-    "path": "/rest/build-status/1.0/commits/5c60c419242643c101f334ea104f23887ddb560a",
-    "body": {
-      "state": "SUCCESSFUL",
-      "key": "build",
-      "name": "builder",
-      "url": "https://probo.ci/builds/akljf",
-      "description": "build succeeded"
+    "path": "/bitbucket",
+    "body": [
+      {
+        "repository": {
+          "uuid": "{cd7cd99c-af88-4068-93bf-5232db633d4e}",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/dzinkevich/probo-test/avatar/32/"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dzinkevich/probo-test"
+            }
+          },
+          "owner": {
+            "type": "user",
+            "uuid": "{f9aa053b-3540-4093-9f6c-e02409c3c65b}",
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/users/dzinkevich"
+              },
+              "avatar": {
+                "href": "https://bitbucket.org/account/dzinkevich/avatar/32/"
+              },
+              "html": {
+                "href": "https://bitbucket.org/dzinkevich/"
+              }
+            },
+            "display_name": "Daniel Zinkevich",
+            "username": "dzinkevich"
+          },
+          "is_private": false,
+          "full_name": "dzinkevich/probo-test",
+          "type": "repository",
+          "name": "Probo Test",
+          "scm": "git"
+        },
+        "pullrequest": {
+          "author": {
+            "type": "user",
+            "uuid": "{f9aa053b-3540-4093-9f6c-e02409c3c65b}",
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/users/dzinkevich"
+              },
+              "avatar": {
+                "href": "https://bitbucket.org/account/dzinkevich/avatar/32/"
+              },
+              "html": {
+                "href": "https://bitbucket.org/dzinkevich/"
+              }
+            },
+            "display_name": "Daniel Zinkevich",
+            "username": "dzinkevich"
+          },
+          "participants": [],
+          "source": {
+            "branch": {
+              "name": "pull-request"
+            },
+            "repository": {
+              "type": "repository",
+              "uuid": "{cd7cd99c-af88-4068-93bf-5232db633d4e}",
+              "name": "Probo Test",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test"
+                },
+                "avatar": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test/avatar/32/"
+                },
+                "html": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test"
+                }
+              },
+              "full_name": "dzinkevich/probo-test"
+            },
+            "commit": {
+              "hash": "32b9507adff3",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test/commit/32b9507adff3"
+                }
+              }
+            }
+          },
+          "title": "Adding a line to README.",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test/pullrequests/1"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dzinkevich/probo-test/pull-requests/1"
+            }
+          },
+          "closed_by": null,
+          "updated_on": "2015-12-09T20:14:41.896020+00:00",
+          "close_source_branch": true,
+          "reason": "",
+          "destination": {
+            "branch": {
+              "name": "master"
+            },
+            "repository": {
+              "type": "repository",
+              "uuid": "{cd7cd99c-af88-4068-93bf-5232db633d4e}",
+              "name": "Probo Test",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test"
+                },
+                "avatar": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test/avatar/32/"
+                },
+                "html": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test"
+                }
+              },
+              "full_name": "dzinkevich/probo-test"
+            },
+            "commit": {
+              "hash": "4eb714533e99",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test/commit/4eb714533e99"
+                }
+              }
+            }
+          },
+          "description": "",
+          "merge_commit": null,
+          "id": 1,
+          "type": "pullrequest",
+          "reviewers": [],
+          "created_on": "2015-12-09T17:42:58.430935+00:00",
+          "state": "OPEN"
+        },
+        "actor": {
+          "type": "user",
+          "uuid": "{f9aa053b-3540-4093-9f6c-e02409c3c65b}",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/users/dzinkevich"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/account/dzinkevich/avatar/32/"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dzinkevich/"
+            }
+          },
+          "display_name": "Daniel Zinkevich",
+          "username": "dzinkevich"
+        }
+      }
+    ],
+    "status": 200,
+    "response": {
+      "ok": true
     },
-    "status": 204,
-    "response": "",
     "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3803x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME, X-AUSERID, Cookie",
-      "x-content-type-options": "nosniff",
-      "set-cookie": [
-        "JSESSIONID=E9E84ACC54D764CD162608D8FABA6150; Path=/; HttpOnly"
-      ],
       "content-type": "application/json",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
+      "content-length": "11",
+      "date": "Thu, 10 Dec 2015 16:51:02 GMT",
       "connection": "close"
+    }
+  },
+  {
+    "scope": "http://localhost:3000",
+    "method": "GET",
+    "path": "/projects?service=bitbucket&slug=dzinkevich%2Fprobo-test&single=true",
+    "body": "",
+    "status": 401,
+    "response": "Unauthorized",
+    "headers": {
+      "www-authenticate": "Bearer realm=\"Users\", error=\"invalid_token\"",
+      "date": "Thu, 10 Dec 2015 16:51:03 GMT",
+      "connection": "close",
+      "content-length": "12"
     }
   }
 ]

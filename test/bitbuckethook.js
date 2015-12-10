@@ -3,17 +3,23 @@
 var util = require('util');
 var request = require('request');
 var should = require('should');
-
+var bunyan = require('bunyan');
 var BitbucketHandler = require('../lib/BitbucketHandler');
 
 var config = {
   bitbucketWebhookPath: '/bitbucket',
   port: 0,
   api: {
+    service: 'bitbucket',
     url: 'http://localhost:3000',
-    token: 'token2',
+    token: 'VadnVNoK9qFYIYRMe3R7WgWzAg67_AYbNgNjLYkXekGao',
+    refreshToken: 'yLHwBxav5L9swPuQvL'
   },
+  bbWebhookUrl: 'http://app.local.probo.ci/bitbucket',
+  bbClientKey: 'AaGukdu6qpWrB9pyeW',
+  bbClientSecret: 'zryeH2WnGh4UK798GV2CE5WNkMCLHTbU',
   log_level: Number.POSITIVE_INFINITY,
+  log: bunyan.createLogger({name: 'api-client', level: 'debug'}),
 };
 
 var handlerServer = new BitbucketHandler(config);
@@ -32,15 +38,16 @@ function initNock() {
   var project = {
     id: '1234',
     service: 'bitbucket',
-    owner: 'zanchin',
-    repo: 'testrepo',
-    slug: 'zanchin/testrepo',
+    owner: 'dzinkevich',
+    repo: 'probo-test',
+    slug: 'dzinkevich/probo-test',
+    service_auth: config.api,
   };
 
   var build = {
     id: 'build1',
     projectId: '123',
-    sha: '9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
+    sha: 'd065740',
     project: project,
   };
 
@@ -50,7 +57,7 @@ function initNock() {
 
   // nock out API URLs
   nocked.project_search = nock(config.api.url)
-    .get('/projects?service=bitbucket&slug=zanchin%2Ftestrepo&single=true')
+    .get('/projects?service=bitbucket&slug=dzinkevich%2Fprobo-test&single=true')
     .reply(200, project);
 
   nocked.startbuild = nock(config.api.url)
@@ -113,19 +120,20 @@ describe.only('webhooks', function() {
   });
 
 
-  describe.only('push', function() {
+  describe.only('pullrequest', function() {
     beforeEach('nock out network calls', function() {
       nock.cleanAll();
       initNock();
     });
 
     it('is routed', function(done) {
-      var payload = require('./push_payload');
+      var payload = require('./pullrequest_payload');
       var headers = {};
 
       http(config.bitbucketWebhookPath)
       .post({body: payload, headers: headers}, function _(err, res, body) {
         // handles push by returning OK and doing nothing else
+        console.log('pr is routed' + typeof body);
         body.should.eql({ok: true});
         should.not.exist(err);
 
@@ -135,17 +143,19 @@ describe.only('webhooks', function() {
 
 
     it('is handled', function(done) {
-      var payload = require('./push_payload');
+      var payload = require('./pullrequest_payload');
 
       // fire off handler event
       var event = {
         event: 'UPDATE',
         url: '/bitbucket',
-        payload: payload,
+        payload: payload[0],
       };
-
-      handlerServer.pushHandler(event, function(err, build) {
+      handlerServer.pullRequestHandler(event, function(err, build) {
+        console.log('pullrequesthandler response');
         should.not.exist(err);
+        console.log(util.inspect(err, {showHidden: false, depth: null}));
+        console.log('is handled' + typeof build);
         build.should.eql({
           id: 'build1',
           projectId: '1234',
@@ -153,9 +163,9 @@ describe.only('webhooks', function() {
           project: {
             id: '1234',
             owner: 'TEST',
-            repo: 'testrepo',
+            repo: 'probo-test',
             service: 'bitbucket',
-            slug: 'TEST/testrepo',
+            slug: 'TEST/probo-test',
           },
         });
 
@@ -215,9 +225,9 @@ describe('status update endpoint', function() {
       project: {
         id: '1234',
         service: 'bitbucket',
-        owner: 'zanchin',
-        repo: 'testrepo',
-        slug: 'zanchin/testrepo',
+        owner: 'dzinkevich',
+        repo: 'probo-test',
+        slug: 'dzinkevich/probo-test',
       },
     };
 
@@ -227,6 +237,7 @@ describe('status update endpoint', function() {
         build: build,
       }}, function _(err, res, body) {
         should.not.exist(err);
+        console.log('update ' + typeof body);
         body.should.eql(update);
 
         return done(err);
@@ -256,9 +267,9 @@ describe('status update endpoint', function() {
       project: {
         id: '1234',
         service: 'bitbucket',
-        owner: 'zanchin',
-        repo: 'testrepo',
-        slug: 'zanchin/testrepo',
+        owner: 'dzinkevich',
+        repo: 'probo-test',
+        slug: 'dzinkevich/probo-test',
       },
     };
 
@@ -268,6 +279,7 @@ describe('status update endpoint', function() {
         build: build,
       }}, function _(err, res, body) {
         should.not.exist(err);
+        console.log('accepts context ' + typeof body);
         body.should.eql({
           state: 'pending',
           description: 'Environment built!',
