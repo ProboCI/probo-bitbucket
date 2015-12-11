@@ -1,7 +1,7 @@
 {
   "name": "probo-bitbucket-handler",
   "version": "0.0.1",
-  "description": "",
+  "description": "The bitbucket integration service for Probo.ci.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js -c dev.yaml | bunyan",
@@ -9,8 +9,8 @@
     "test": "mocha --require should",
     "watch": "mocha -w --require should | bunyan"
   },
-  "author": "",
-  "license": "Proprietary",
+  "author": "ProboCI <info@probo.ci> (http://probo.ci)",
+  "license": "MIT",
   "dependencies": {
     "async": "^1.5.0",
     "bluebird": "^2.10.0",
@@ -28,5 +28,16 @@
     "mocha": "^2.2.4",
     "nock": "^1.6.0",
     "should": "^5.2.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProboCI/probo-bitbucket.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ProboCI/probo-bitbucket/issues"
+  },
+  "homepage": "https://github.com/ProboCI/probo-bitbucket#readme"
 }
