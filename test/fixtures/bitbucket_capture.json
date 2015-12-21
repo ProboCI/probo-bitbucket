@@ -1,0 +1,188 @@
+[
+  {
+    "scope": "http://0.0.0.0:54814",
+    "method": "POST",
+    "path": "/bitbucket",
+    "body": [
+      {
+        "repository": {
+          "uuid": "{cd7cd99c-af88-4068-93bf-5232db633d4e}",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/dzinkevich/probo-test/avatar/32/"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dzinkevich/probo-test"
+            }
+          },
+          "owner": {
+            "type": "user",
+            "uuid": "{f9aa053b-3540-4093-9f6c-e02409c3c65b}",
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/users/dzinkevich"
+              },
+              "avatar": {
+                "href": "https://bitbucket.org/account/dzinkevich/avatar/32/"
+              },
+              "html": {
+                "href": "https://bitbucket.org/dzinkevich/"
+              }
+            },
+            "display_name": "Daniel Zinkevich",
+            "username": "dzinkevich"
+          },
+          "is_private": false,
+          "full_name": "dzinkevich/probo-test",
+          "type": "repository",
+          "name": "Probo Test",
+          "scm": "git"
+        },
+        "pullrequest": {
+          "author": {
+            "type": "user",
+            "uuid": "{f9aa053b-3540-4093-9f6c-e02409c3c65b}",
+            "links": {
+              "self": {
+                "href": "https://api.bitbucket.org/2.0/users/dzinkevich"
+              },
+              "avatar": {
+                "href": "https://bitbucket.org/account/dzinkevich/avatar/32/"
+              },
+              "html": {
+                "href": "https://bitbucket.org/dzinkevich/"
+              }
+            },
+            "display_name": "Daniel Zinkevich",
+            "username": "dzinkevich"
+          },
+          "participants": [],
+          "source": {
+            "branch": {
+              "name": "pull-request"
+            },
+            "repository": {
+              "type": "repository",
+              "uuid": "{cd7cd99c-af88-4068-93bf-5232db633d4e}",
+              "name": "Probo Test",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test"
+                },
+                "avatar": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test/avatar/32/"
+                },
+                "html": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test"
+                }
+              },
+              "full_name": "dzinkevich/probo-test"
+            },
+            "commit": {
+              "hash": "32b9507adff3",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test/commit/32b9507adff3"
+                }
+              }
+            }
+          },
+          "title": "Adding a line to README.",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test/pullrequests/1"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dzinkevich/probo-test/pull-requests/1"
+            }
+          },
+          "closed_by": null,
+          "updated_on": "2015-12-09T20:14:41.896020+00:00",
+          "close_source_branch": true,
+          "reason": "",
+          "destination": {
+            "branch": {
+              "name": "master"
+            },
+            "repository": {
+              "type": "repository",
+              "uuid": "{cd7cd99c-af88-4068-93bf-5232db633d4e}",
+              "name": "Probo Test",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test"
+                },
+                "avatar": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test/avatar/32/"
+                },
+                "html": {
+                  "href": "https://bitbucket.org/dzinkevich/probo-test"
+                }
+              },
+              "full_name": "dzinkevich/probo-test"
+            },
+            "commit": {
+              "hash": "4eb714533e99",
+              "links": {
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/dzinkevich/probo-test/commit/4eb714533e99"
+                }
+              }
+            }
+          },
+          "description": "",
+          "merge_commit": null,
+          "id": 1,
+          "type": "pullrequest",
+          "reviewers": [],
+          "created_on": "2015-12-09T17:42:58.430935+00:00",
+          "state": "OPEN"
+        },
+        "actor": {
+          "type": "user",
+          "uuid": "{f9aa053b-3540-4093-9f6c-e02409c3c65b}",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/users/dzinkevich"
+            },
+            "avatar": {
+              "href": "https://bitbucket.org/account/dzinkevich/avatar/32/"
+            },
+            "html": {
+              "href": "https://bitbucket.org/dzinkevich/"
+            }
+          },
+          "display_name": "Daniel Zinkevich",
+          "username": "dzinkevich"
+        }
+      }
+    ],
+    "status": 200,
+    "response": {
+      "ok": true
+    },
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "11",
+      "date": "Thu, 10 Dec 2015 16:51:02 GMT",
+      "connection": "close"
+    }
+  },
+  {
+    "scope": "http://localhost:3000",
+    "method": "GET",
+    "path": "/projects?service=bitbucket&slug=dzinkevich%2Fprobo-test&single=true",
+    "body": "",
+    "status": 401,
+    "response": "Unauthorized",
+    "headers": {
+      "www-authenticate": "Bearer realm=\"Users\", error=\"invalid_token\"",
+      "date": "Thu, 10 Dec 2015 16:51:03 GMT",
+      "connection": "close",
+      "content-length": "12"
+    }
+  }
+]

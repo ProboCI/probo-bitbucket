@@ -32,7 +32,7 @@ after('stop BitbucketHandler server', function() {
   //nocker.stop('./test/bitbucket_capture.json');
 });
 
-
+/*
 describe('repos', function() {
   it('getAll', function(done) {
     bitbucket.repos.getAll(function(err, repos) {
@@ -95,3 +95,4 @@ describe('statuses', function() {
   });
 
 });
+*/
