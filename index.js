@@ -29,7 +29,9 @@ if (argv.config) {
     argv.config = [argv.config];
   }
   for (var i in argv.config) {
-    loader.add(path.resolve(argv.config[i]));
+    if (typeof argv.config[i] === 'string') {
+      loader.add(path.resolve(argv.config[i]));
+    }
   }
 }
 
@@ -38,9 +40,8 @@ var executor = handler;
 if (executor.options) {
   yargs = executor.options(yargs);
   var setOptions = {};
-  var key = null;
-  for (key in yargs.argv) {
-    if (yargs.argv[key] !== undefined) {
+  for (var key in yargs.argv) {
+    if (typeof yargs.argv[key] !== 'undefined') {
       setOptions[key] = yargs.argv[key];
     }
   }

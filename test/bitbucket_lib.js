@@ -36,7 +36,7 @@ describe('repos', function() {
     bitbucket.repos.getAll(function(err, repos) {
       should.not.exist(err);
 
-      repos.should.be.an.Array;
+      repos.should.be.an.Array();
       repos.length.should.be.above(0);
       return done(err);
     });
@@ -51,7 +51,7 @@ describe('repos', function() {
     bitbucket.repos.getContent(req, function(err, content) {
       should.not.exist(err);
 
-      content.should.be.a.String;
+      content.should.be.a.String();
       return done(err);
     });
   });
@@ -66,7 +66,7 @@ describe('repos', function() {
 
       // console.log(JSON.stringify(files, null, 2))
 
-      files.should.be.an.Array;
+      files.should.be.an.Array();
       files.length.should.be.above(0);
       return done(err);
     });
