@@ -22,12 +22,6 @@ exports.options = function(yargs) {
   return yargs
     .describe('port', 'The port on which to listen for incoming requests.')
     .alias('port', 'p')
-    .describe('bitbucket-webhook-path', 'The path at which to listen for webhooks.')
-    .alias('bitbucket-webhook-path', 'P')
-    .describe('bitbucket-webhook-secret', 'The webhook secret provided to Bitbucket.')
-    .alias('bitbucket-webhook-secret', 's')
-    .describe('bitbucket-api-token', 'The API token to use to write to Bitbucket.')
-    .alias('bitbucket-api-token', 'a')
   ;
 };
 
