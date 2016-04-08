@@ -16,11 +16,12 @@
     "bluebird": "^2.10.0",
     "bunyan": "^1.4.0",
     "js-yaml": "^3.3.1",
+    "lodash": "^4.9.0",
     "oauth": "^0.9.14",
-    "restify": "^3.0.3",
     "request": "^2.57.0",
+    "restify": "^3.0.3",
     "superagent": "^1.2.0",
-    "yaml-config-loader": "1.1.1",
+    "yaml-config-loader": "^2.0.1",
     "yargs": "^3.4.5"
   },
   "devDependencies": {
