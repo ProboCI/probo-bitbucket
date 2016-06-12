@@ -20,6 +20,8 @@ exports.help += 'Provides a bitbucket webhook endpoint.';
 exports.options = function(yargs) {
   this.yargs = yargs;
   return yargs
+    .describe('help', 'Displays this message.')
+    .alias('help', 'h')
     .describe('port', 'The port on which to listen for incoming requests.')
     .alias('port', 'p')
     .describe('bitbucket-webhook-path', 'The path at which to listen for webhooks.')
