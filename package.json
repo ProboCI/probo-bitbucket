@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js -c dev.yaml | bunyan",
-    "startdev": "nodemon index.js -c dev.yaml | bunyan",
+    "start": "./bin/probo-bitbucket-handler -c dev.yaml | bunyan",
+    "startdev": "nodemon ./bin/probo-bitbucket-handler -c dev.yaml | bunyan",
     "test": "mocha --require should",
     "watch": "mocha -w --require should | bunyan"
   },
