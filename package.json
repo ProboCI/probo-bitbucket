@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js -c dev.yaml | bunyan",
-    "startdev": "nodemon index.js -c dev.yaml | bunyan",
+    "start": "./bin/probo-bitbucket-handler -c dev.yaml | bunyan",
+    "startdev": "nodemon ./bin/probo-bitbucket-handler -c dev.yaml | bunyan",
     "test": "mocha --require should",
     "watch": "mocha -w --require should | bunyan"
   },
@@ -17,8 +17,9 @@
     "bunyan": "^1.4.0",
     "js-yaml": "^3.3.1",
     "oauth": "^0.9.14",
-    "restify": "^3.0.3",
+    "querystring": "^0.2.0",
     "request": "^2.57.0",
+    "restify": "^3.0.3",
     "superagent": "^1.2.0",
     "yaml-config-loader": "1.1.1",
     "yargs": "^3.4.5"
