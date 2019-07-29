@@ -34,9 +34,7 @@ argv = argv.argv;
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
-console.log(argv.config);
 if (argv.c) {
-  console.log(argv.c);
   if (typeof argv.c === 'string') {
     argv.c = [argv.c];
   }
