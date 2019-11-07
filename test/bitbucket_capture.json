@@ -1,325 +1,209 @@
 [
   {
-    "scope": "http://localhost:7990",
-    "method": "GET",
-    "path": "/rest/api/1.0/repos?limit=100&permission=REPO_ADMIN",
-    "body": "",
-    "status": 200,
-    "response": {
-      "size": 2,
-      "limit": 100,
-      "isLastPage": true,
-      "values": [
-        {
-          "slug": "peronalrepo",
-          "id": 11,
-          "name": "peronalrepo",
-          "scmId": "git",
-          "state": "AVAILABLE",
-          "statusMessage": "Available",
-          "forkable": true,
-          "project": {
-            "key": "~ILYA",
-            "id": 2,
-            "name": "ilya",
-            "type": "PERSONAL",
-            "owner": {
-              "name": "ilya",
-              "emailAddress": "ilya+stash@bluenexa.com",
-              "id": 1,
-              "displayName": "ilya",
-              "active": true,
-              "slug": "ilya",
-              "type": "NORMAL",
-              "link": {
-                "url": "/users/ilya",
-                "rel": "self"
+    "scope": "http://0.0.0.0:42189",
+    "method": "POST",
+    "path": "/bitbucket",
+    "body": {
+      "push": {
+        "changes": [
+          {
+            "links": {
+              "commits": {
+                "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commits?include=71016380d9ebeb87557e98577eaf9b3ac3ea74bb&exclude=8ed3ce75085f322351e9c78d726d06f7b81bee6b"
               },
+              "diff": {
+                "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/diff/71016380d9ebeb87557e98577eaf9b3ac3ea74bb..8ed3ce75085f322351e9c78d726d06f7b81bee6b"
+              },
+              "html": {
+                "href": "https://bitbucket.org/zanchin/test-repo/branches/compare/71016380d9ebeb87557e98577eaf9b3ac3ea74bb..8ed3ce75085f322351e9c78d726d06f7b81bee6b"
+              }
+            },
+            "truncated": false,
+            "old": {
               "links": {
-                "self": [
+                "commits": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commits/pr1-branch"
+                },
+                "html": {
+                  "href": "https://bitbucket.org/zanchin/test-repo/branch/pr1-branch"
+                },
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/refs/branches/pr1-branch"
+                }
+              },
+              "target": {
+                "date": "2015-11-24T20:25:47+00:00",
+                "hash": "8ed3ce75085f322351e9c78d726d06f7b81bee6b",
+                "parents": [
                   {
-                    "href": "http://localhost:7990/users/ilya"
+                    "links": {
+                      "html": {
+                        "href": "https://bitbucket.org/zanchin/test-repo/commits/b55a1b5169c02854fdf389b7bcc8125fea4949d4"
+                      },
+                      "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/b55a1b5169c02854fdf389b7bcc8125fea4949d4"
+                      }
+                    },
+                    "hash": "b55a1b5169c02854fdf389b7bcc8125fea4949d4",
+                    "type": "commit"
                   }
-                ]
-              }
-            },
-            "link": {
-              "url": "/users/ilya",
-              "rel": "self"
-            },
-            "links": {
-              "self": [
-                {
-                  "href": "http://localhost:7990/users/ilya"
+                ],
+                "links": {
+                  "html": {
+                    "href": "https://bitbucket.org/zanchin/test-repo/commits/8ed3ce75085f322351e9c78d726d06f7b81bee6b"
+                  },
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/8ed3ce75085f322351e9c78d726d06f7b81bee6b"
+                  }
+                },
+                "type": "commit",
+                "message": "Tue Nov 24 15:25:47 EST 2015\n",
+                "author": {
+                  "raw": "Ilya Braude <ilya@bluenexa.com>"
                 }
-              ]
-            }
-          },
-          "public": false,
-          "link": {
-            "url": "/users/ilya/repos/peronalrepo/browse",
-            "rel": "self"
-          },
-          "cloneUrl": "http://ilya@localhost:7990/scm/~ilya/peronalrepo.git",
-          "links": {
-            "clone": [
-              {
-                "href": "http://ilya@localhost:7990/scm/~ilya/peronalrepo.git",
-                "name": "http"
               },
+              "name": "pr1-branch",
+              "type": "branch"
+            },
+            "commits": [
               {
-                "href": "ssh://git@localhost:7999/~ilya/peronalrepo.git",
-                "name": "ssh"
+                "links": {
+                  "html": {
+                    "href": "https://bitbucket.org/zanchin/test-repo/commits/71016380d9ebeb87557e98577eaf9b3ac3ea74bb"
+                  },
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/71016380d9ebeb87557e98577eaf9b3ac3ea74bb"
+                  }
+                },
+                "message": "Tue Nov 24 20:59:58 EST 2015\n",
+                "hash": "71016380d9ebeb87557e98577eaf9b3ac3ea74bb",
+                "type": "commit",
+                "author": {
+                  "raw": "Ilya Braude <ilya@bluenexa.com>"
+                }
               }
             ],
-            "self": [
-              {
-                "href": "http://localhost:7990/users/ilya/repos/peronalrepo/browse"
-              }
-            ]
-          }
-        },
-        {
-          "slug": "testrepo",
-          "id": 1,
-          "name": "testrepo",
-          "scmId": "git",
-          "state": "AVAILABLE",
-          "statusMessage": "Available",
-          "forkable": true,
-          "project": {
-            "key": "TEST",
-            "id": 1,
-            "name": "test project",
-            "description": "this is the project description",
-            "public": false,
-            "type": "NORMAL",
-            "link": {
-              "url": "/projects/TEST",
-              "rel": "self"
-            },
-            "links": {
-              "self": [
-                {
-                  "href": "http://localhost:7990/projects/TEST"
+            "created": false,
+            "new": {
+              "links": {
+                "commits": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commits/pr1-branch"
+                },
+                "html": {
+                  "href": "https://bitbucket.org/zanchin/test-repo/branch/pr1-branch"
+                },
+                "self": {
+                  "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/refs/branches/pr1-branch"
                 }
-              ]
-            }
-          },
-          "public": false,
-          "link": {
-            "url": "/projects/TEST/repos/testrepo/browse",
-            "rel": "self"
-          },
-          "cloneUrl": "http://ilya@localhost:7990/scm/test/testrepo.git",
-          "links": {
-            "clone": [
-              {
-                "href": "http://ilya@localhost:7990/scm/test/testrepo.git",
-                "name": "http"
               },
-              {
-                "href": "ssh://git@localhost:7999/test/testrepo.git",
-                "name": "ssh"
-              }
-            ],
-            "self": [
-              {
-                "href": "http://localhost:7990/projects/TEST/repos/testrepo/browse"
-              }
-            ]
+              "target": {
+                "date": "2015-11-25T01:59:58+00:00",
+                "hash": "71016380d9ebeb87557e98577eaf9b3ac3ea74bb",
+                "parents": [
+                  {
+                    "links": {
+                      "html": {
+                        "href": "https://bitbucket.org/zanchin/test-repo/commits/8ed3ce75085f322351e9c78d726d06f7b81bee6b"
+                      },
+                      "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/8ed3ce75085f322351e9c78d726d06f7b81bee6b"
+                      }
+                    },
+                    "hash": "8ed3ce75085f322351e9c78d726d06f7b81bee6b",
+                    "type": "commit"
+                  }
+                ],
+                "links": {
+                  "html": {
+                    "href": "https://bitbucket.org/zanchin/test-repo/commits/71016380d9ebeb87557e98577eaf9b3ac3ea74bb"
+                  },
+                  "self": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo/commit/71016380d9ebeb87557e98577eaf9b3ac3ea74bb"
+                  }
+                },
+                "type": "commit",
+                "message": "Tue Nov 24 20:59:58 EST 2015\n",
+                "author": {
+                  "raw": "Ilya Braude <ilya@bluenexa.com>"
+                }
+              },
+              "name": "pr1-branch",
+              "type": "branch"
+            },
+            "forced": false,
+            "closed": false
           }
-        }
-      ],
-      "start": 0
-    },
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3800x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME,Accept-Encoding",
-      "transfer-encoding": "chunked",
-      "content-type": "application/json;charset=UTF-8",
-      "x-content-type-options": "nosniff",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
-  },
-  {
-    "scope": "http://localhost:7990",
-    "method": "GET",
-    "path": "/rest/api/1.0/projects/TEST/repos/testrepo/browse/.proviso.yml",
-    "body": "",
-    "status": 200,
-    "response": {
-      "lines": [
-        {
-          "text": "image: lepew/ubuntu-14.04-lamp"
-        },
-        {
-          "text": "# Eventual TODO"
-        },
-        {
-          "text": "# provisioner: bash"
-        },
-        {
-          "text": "# bash_config:"
-        },
-        {
-          "text": "#   command: drush site-install minimal"
-        },
-        {
-          "text": "# Eventual TODO"
-        },
-        {
-          "text": "# provisioner: drush"
-        },
-        {
-          "text": "# drush_config:"
-        },
-        {
-          "text": "#    profile: minimal"
-        },
-        {
-          "text": "provisioner: fetcher"
-        },
-        {
-          "text": "fetcher_config:"
-        },
-        {
-          "text": "  # Any option from https://github.com/tizzo/fetcher/blob/7.x-1.x/KEYS.txt is valid here."
-        },
-        {
-          "text": "  name: awesome"
-        },
-        {
-          "text": "  environment.remote: dev"
-        },
-        {
-          "text": "  info_fetcher.class: 'FetcherServices\\InfoFetcher\\FetcherServices'"
-        },
-        {
-          "text": "  info_fetcher.config:"
-        },
-        {
-          "text": "    host: 'https://extranet.zivtech.com'"
-        }
-      ],
-      "start": 0,
-      "size": 17,
-      "isLastPage": true
-    },
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3801x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME, X-AUSERID, Cookie",
-      "x-content-type-options": "nosniff",
-      "set-cookie": [
-        "JSESSIONID=9036335B2F00CB031C45D73102AFD788; Path=/; HttpOnly"
-      ],
-      "content-type": "application/json;charset=UTF-8",
-      "content-length": "736",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
-  },
-  {
-    "scope": "http://localhost:7990",
-    "method": "GET",
-    "path": "/rest/api/1.0/projects/TEST/repos/testrepo/browse/",
-    "body": "",
-    "status": 200,
-    "response": {
-      "path": {
-        "components": [],
-        "name": "",
-        "toString": ""
+        ]
       },
-      "revision": "refs/heads/master",
-      "children": {
-        "size": 2,
-        "limit": 500,
-        "isLastPage": true,
-        "values": [
-          {
-            "path": {
-              "components": [
-                ".proviso.yml"
-              ],
-              "parent": "",
-              "name": ".proviso.yml",
-              "extension": "yml",
-              "toString": ".proviso.yml"
+      "repository": {
+        "uuid": "{70f6355b-afb3-4ea2-b3a7-616142ae5800}",
+        "is_private": true,
+        "owner": {
+          "uuid": "{80331edf-633e-417c-a309-6d743142b61a}",
+          "display_name": "zanchin",
+          "username": "zanchin",
+          "type": "user",
+          "links": {
+            "html": {
+              "href": "https://bitbucket.org/zanchin/"
             },
-            "contentId": "b60c7cc8d2b690ca0143e74bc6d6d5337d98930f",
-            "type": "FILE"
-          },
-          {
-            "path": {
-              "components": [
-                "file"
-              ],
-              "parent": "",
-              "name": "file",
-              "toString": "file"
+            "avatar": {
+              "href": "https://bitbucket.org/account/zanchin/avatar/32/"
             },
-            "contentId": "f73f3093ff865c514c6c51f867e35f693487d0d3",
-            "type": "FILE"
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/users/zanchin"
+            }
           }
-        ],
-        "start": 0
+        },
+        "links": {
+          "html": {
+            "href": "https://bitbucket.org/zanchin/test-repo"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/zanchin/test-repo/avatar/32/"
+          },
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/repositories/zanchin/test-repo"
+          }
+        },
+        "name": "test repo",
+        "type": "repository",
+        "scm": "git",
+        "full_name": "zanchin/test-repo"
+      },
+      "actor": {
+        "uuid": "{80331edf-633e-417c-a309-6d743142b61a}",
+        "display_name": "zanchin",
+        "username": "zanchin",
+        "type": "user",
+        "links": {
+          "html": {
+            "href": "https://bitbucket.org/zanchin/"
+          },
+          "avatar": {
+            "href": "https://bitbucket.org/account/zanchin/avatar/32/"
+          },
+          "self": {
+            "href": "https://api.bitbucket.org/2.0/users/zanchin"
+          }
+        }
       }
     },
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3802x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME,Accept-Encoding",
-      "transfer-encoding": "chunked",
-      "content-type": "application/json;charset=UTF-8",
-      "x-content-type-options": "nosniff",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
-  },
-  {
-    "scope": "http://localhost:7990",
-    "method": "POST",
-    "path": "/rest/build-status/1.0/commits/5c60c419242643c101f334ea104f23887ddb560a",
-    "body": {
-      "state": "SUCCESSFUL",
-      "key": "build",
-      "name": "builder",
-      "url": "https://probo.ci/builds/akljf",
-      "description": "build succeeded"
+    "status": 200,
+    "response": {
+      "ok": true
     },
-    "status": 204,
-    "response": "",
-    "headers": {
-      "server": "Apache-Coyote/1.1",
-      "x-arequestid": "@1X09U7Fx174x3803x0",
-      "x-asen": "SEN-L5853331",
-      "x-ausername": "ilya",
-      "x-auserid": "1",
-      "cache-control": "no-cache, no-transform",
-      "vary": "X-AUSERNAME, X-AUSERID, Cookie",
-      "x-content-type-options": "nosniff",
-      "set-cookie": [
-        "JSESSIONID=E9E84ACC54D764CD162608D8FABA6150; Path=/; HttpOnly"
-      ],
-      "content-type": "application/json",
-      "date": "Mon, 15 Jun 2015 02:54:09 GMT",
-      "connection": "close"
-    }
+    "rawHeaders": [
+      "Server",
+      "Probo Bitbucket",
+      "Content-Type",
+      "application/json",
+      "Content-Length",
+      "11",
+      "Date",
+      "Sun, 16 Jun 2019 02:44:40 GMT",
+      "Connection",
+      "close"
+    ]
   }
 ]
