@@ -1,15 +1,16 @@
 # Port for the server to listen on
 port: 3012
-hostname: localhost
+hostname: 0.0.0.0
 
 bbWebhookUrl: '/bitbucket-webhook'
 # Bitbucket client key and client secret. These are generated for you
 # when you create a new OAuth client in Bitbucket
-# bbClientKey: null
-# bbClientSecret: null
+#bbClientKey: 
+#bbClientSecret: 
+#bbAccessToken: 
+#bbRefreshToken: 
 
 # Settings for the API or Container Manager server
 # port
 api:
-  url: "http://localhost:3000"
-  token: "token2"
+  url: "http://localhost:3020"
