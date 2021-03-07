@@ -14,3 +14,5 @@ RUN cd /home/probo/app/ && npm install
 WORKDIR /home/probo/app
 
 EXPOSE 3012
+
+CMD ["bin/probo-bitbucket-handler"]
