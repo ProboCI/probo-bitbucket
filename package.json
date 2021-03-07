@@ -14,21 +14,21 @@
   "dependencies": {
     "async": "^3.0.1",
     "bluebird": "^3.5.5",
-    "bunyan": "^1.8.12",
+    "bunyan": "^1.8.15",
     "js-yaml": "^3.13.1",
     "oauth": "^0.9.15",
     "querystring": "^0.2.0",
     "request": "^2.88.0",
-    "restify": "^8.3.3",
+    "restify": "^8.5.1",
     "superagent": "^5.1.0",
     "yaml-config-loader": "2.1.0",
-    "yargs": "^13.2.4"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
+    "eslint": "^7.21.0",
     "eslint-config-probo": "^2.0.0",
-    "mocha": "^6.1.4",
-    "nock": "^10.0.6",
+    "mocha": "^8.3.1",
+    "nock": "^13.0.10",
     "should": "^13.2.3"
   }
 }
