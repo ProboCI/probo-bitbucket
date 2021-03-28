@@ -15,4 +15,4 @@ WORKDIR /home/probo/app
 
 EXPOSE 3012
 
-CMD ["bin/probo-bitbucket-handler"]
+CMD ["sh", "/home/probo/app/bin/startup.sh"]
