@@ -10,25 +10,25 @@
     "watch": "mocha -w --require should | bunyan"
   },
   "author": "",
-  "license": "Proprietary",
+  "license": "Apache-2.0",
   "dependencies": {
-    "async": "^1.5.0",
-    "bluebird": "^2.10.0",
-    "bunyan": "^1.4.0",
-    "js-yaml": "^3.3.1",
-    "oauth": "^0.9.14",
+    "async": "^3.0.1",
+    "bluebird": "^3.5.5",
+    "bunyan": "^1.8.15",
+    "js-yaml": "^3.13.1",
+    "oauth": "^0.9.15",
     "querystring": "^0.2.0",
-    "request": "^2.57.0",
-    "restify": "^3.0.3",
-    "superagent": "^1.2.0",
-    "yaml-config-loader": "1.1.1",
-    "yargs": "^3.4.5"
+    "request": "^2.88.0",
+    "restify": "^8.5.1",
+    "superagent": "^5.1.0",
+    "yaml-config-loader": "2.1.0",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "eslint": "^1.10.3",
-    "eslint-config-probo": "^1.0.2",
-    "mocha": "^2.2.4",
-    "nock": "^1.6.0",
-    "should": "^5.2.0"
+    "eslint": "^7.21.0",
+    "eslint-config-probo": "^2.0.0",
+    "mocha": "^8.3.1",
+    "nock": "^13.0.10",
+    "should": "^13.2.3"
   }
 }
