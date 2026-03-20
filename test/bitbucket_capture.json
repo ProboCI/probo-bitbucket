@@ -1,6 +1,6 @@
 [
   {
-    "scope": "http://0.0.0.0:42189",
+    "scope": "http://0.0.0.0:56057",
     "method": "POST",
     "path": "/bitbucket",
     "body": {
@@ -193,17 +193,13 @@
     "response": {
       "ok": true
     },
-    "rawHeaders": [
-      "Server",
-      "Probo Bitbucket",
-      "Content-Type",
-      "application/json",
-      "Content-Length",
-      "11",
-      "Date",
-      "Sun, 16 Jun 2019 02:44:40 GMT",
-      "Connection",
-      "close"
-    ]
+    "headers": {
+      "server": "Probo Bitbucket",
+      "content-type": "application/json",
+      "content-length": "11",
+      "date": "Fri, 20 Mar 2026 18:47:19 GMT",
+      "connection": "keep-alive",
+      "keep-alive": "timeout=5"
+    }
   }
 ]
