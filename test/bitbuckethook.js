@@ -7,13 +7,17 @@ var should = require('should');
 var BitbucketHandler = require('../lib/BitbucketHandler');
 
 var config = {
-  bitbucketWebhookPath: '/bitbucket',
+  bbWebhookUrl: '/bitbucket',
+  bbClientKey: 'test',
+  bbClientSecret: 'test',
+  bbAccessToken: 'test',
+  bbRefreshToken: 'test',
   port: 0,
   api: {
     url: 'http://localhost:3000',
     token: 'token2',
   },
-  log_level: Number.POSITIVE_INFINITY,
+  log_level: Number.POSITIVE_INFINITY
 };
 
 var handlerServer = new BitbucketHandler(config);
@@ -68,7 +72,7 @@ function initNock() {
     });
 
   // nock out bitbucket URLs
-  var nocks = nock.load('./test/http_capture.json');
+  var nocks = nock.load('./test/bitbucket_capture.json');
   nocks.forEach(function(n, i) {
     if (i !== 2) {
       nocked['bitbucket_' + i] = n;
@@ -106,7 +110,7 @@ describe.only('webhooks', function() {
   });
 
   after('stop BitbucketHandler server', function(done) {
-    handlerServer.stop(done);
+    handlerServer.close(done);
 
     // var nockCallObjects = nock.recorder.play();
     // require('fs').writeFileSync("http_capture.json", util.inspect(nockCallObjects, null, 5));
@@ -123,7 +127,7 @@ describe.only('webhooks', function() {
       var payload = require('./push_payload');
       var headers = {};
 
-      http(config.bitbucketWebhookPath)
+      http(config.bbWebhookUrl)
       .post({body: payload, headers: headers}, function _(err, res, body) {
         // handles push by returning OK and doing nothing else
         body.should.eql({ok: true});
@@ -144,7 +148,7 @@ describe.only('webhooks', function() {
         payload: payload,
       };
 
-      handlerServer.pushHandler(event, function(err, build) {
+      handlerServer.pullRequestHandler(event, function(err, build) {
         should.not.exist(err);
         build.should.eql({
           id: 'build1',
