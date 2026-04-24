@@ -10,6 +10,8 @@ var config = {
   bbWebhookUrl: '/bitbucket',
   bbClientKey: 'test',
   bbClientSecret: 'test',
+  bbAccessToken: 'test',
+  bbRefreshToken: 'test',
   port: 0,
   api: {
     url: 'http://localhost:3000',
