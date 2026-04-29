@@ -35,6 +35,10 @@ Configuration is loaded via `yaml-config-loader` in priority order (last wins):
 | `bbWebhookUrl` | `/bitbucket-webhook` | Webhook endpoint path |
 | `api.url` | `http://localhost:3020` | Probo coordinator API URL |
 | `api.token` | | API token (enables coordinator mode) |
+| `logFile.enabled` | `false` | Enable file-based logging. When on, stdout/stderr logging is disabled. |
+| `logFile.path` | `./logs/bitbucket-handler.log` | Log file path (parent directory is auto-created) |
+| `logFile.period` | `1d` | Rotation period (bunyan format, e.g. `1d`, `1h`) |
+| `logFile.count` | `7` | Number of rotated files to keep |
 
 ### Example Config File
 
@@ -47,6 +51,13 @@ bbRefreshToken: your-refresh-token
 api:
   url: "http://localhost:3020"
   token: your-api-token
+
+# Optional: write logs to a daily-rotated file instead of stdout/stderr.
+logFile:
+  enabled: true
+  path: /var/log/probo/bitbucket-handler.log
+  period: 1d
+  count: 7
 ```
 
 ## Usage

@@ -5,6 +5,7 @@ All notable changes to the Probo Bitbucket Handler are documented in this file.
 ## [Unreleased]
 
 ### Added
+- Optional file-based logging with daily rotation via the `logFile` config block (`enabled`, `path`, `period`, `count`). Defaults to 7 days of retention. When enabled, stdout/stderr logging is disabled so logs go only to the rotated file.
 - Skip `pullrequest:updated` webhook events when the commit hash has not changed, preventing unnecessary builds from non-code PR updates (e.g. adding reviewers, editing descriptions).
 - Bitbucket API client refactored into `BitbucketApi` class with token refresh callback to fix multi-user authentication issues.
 
