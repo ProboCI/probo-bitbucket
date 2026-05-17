@@ -14,3 +14,12 @@ bbWebhookUrl: '/bitbucket-webhook'
 # port
 api:
   url: "http://localhost:3020"
+
+# Optional file-based logging with daily rotation.
+# When enabled, logs are written ONLY to the configured file —
+# stdout/stderr logging is disabled.
+logFile:
+  enabled: false
+  path: ./logs/bitbucket-handler.log
+  period: 1d
+  count: 7
