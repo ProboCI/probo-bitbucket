@@ -113,6 +113,75 @@ describe('token refresh', function() {
     });
   });
 
+  describe('BitbucketApi.isTokenError', function() {
+
+    // Bitbucket has shipped both wordings. Matching only the older one meant
+    // http() never refreshed, and an expired token failed the build outright.
+    it('recognizes both of the expiry messages Bitbucket sends', function() {
+      var api = makeApi();
+
+      api.isTokenError({error: {message: 'Access token expired. Use your refresh token to obtain a new access token.'}})
+        .should.equal(true);
+      api.isTokenError({error: {message: 'OAuth2 access token expired. Use your refresh token to obtain a new access token.'}})
+        .should.equal(true);
+    });
+
+    it('does not treat unrelated errors as token expiry', function() {
+      var api = makeApi();
+
+      api.isTokenError({error: {message: 'Repository not found'}}).should.equal(false);
+      api.isTokenError({}).should.equal(false);
+      api.isTokenError(null).should.equal(false);
+    });
+  });
+
+  describe('BitbucketApi.http', function() {
+
+    it('refreshes and retries when the access token has expired', function(done) {
+      var api = makeApi();
+
+      nock('https://api.bitbucket.org')
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(401, {type: 'error', error: {message: 'OAuth2 access token expired. Use your refresh token to obtain a new access token.'}});
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token'});
+
+      var retry = nock('https://api.bitbucket.org', {
+        reqheaders: {authorization: 'Bearer new-access-token'},
+      })
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(200, {values: []});
+
+      api.http({path: '/repositories/owner/repo/src'}, function(err, res, body) {
+        should.not.exist(err);
+        body.values.should.eql([]);
+        retry.isDone().should.equal(true);
+        done();
+      });
+    });
+
+    it('gives up when the refresh itself fails', function(done) {
+      var api = makeApi();
+
+      nock('https://api.bitbucket.org')
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(401, {type: 'error', error: {message: 'OAuth2 access token expired. Use your refresh token to obtain a new access token.'}});
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(400, {error: 'invalid_grant', error_description: 'Invalid refresh_token'});
+
+      api.http({path: '/repositories/owner/repo/src'}, function(err) {
+        should.exist(err);
+        err.message.should.match(/Unable to refresh Bitbucket access token/);
+        err.reauthorize.should.equal(true);
+        done();
+      });
+    });
+  });
+
   describe('API.updateTokens', function() {
 
     function makeCoordinatorApi() {
