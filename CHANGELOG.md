@@ -11,6 +11,10 @@ All notable changes to the Probo Bitbucket Handler are documented in this file.
 
 ### Fixed
 - Fixed multi-user authentication bug where the first user's OAuth token was used for all subsequent users.
+- Bitbucket Cloud rotates refresh tokens (enforced 2026-05-04): each refresh invalidates the refresh token it used. Clients that hold the same refresh token now share a single refresh, and a client that still holds an already-consumed token is handed the pair that replaced it instead of burning the chain with a second request.
+- The token write-back to the coordinator is retried on network and 5xx failures instead of being dropped, and now includes the refresh token that was consumed so the coordinator can update every project and user profile still holding it.
+- A refresh rejected as `unauthorized_client` (Bitbucket's response for a rotated-away token) is reported as needing re-authorization, not only `invalid_grant`.
+- `/auth_lookup`, `/branches`, `/commits` and `/pull-request` answer a dead refresh token with `401` and `reauthorize: true` so the coordinator and portal can send the user back through OAuth, instead of a generic 500.
 
 ## [2.0.1] - 2022-03-20
 
