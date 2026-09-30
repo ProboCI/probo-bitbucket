@@ -562,5 +562,70 @@ describe('token refresh', function() {
       first.repos.getCommit({owner: 'zanchin', repo: 'testrepo', ref: 'abc123'}, finish);
       second.repos.getCommit({owner: 'zanchin', repo: 'testrepo', ref: 'abc123'}, finish);
     });
+
+    function callController(handler, name, params, query, cb) {
+      var req = {params: params, query: query, log: log};
+      var res = {
+        json: function(status, body) {
+          cb(status, body);
+        },
+      };
+
+      handler[name](req, res, function() {});
+    }
+
+    it('answers a lookup with the stored access token instead of refreshing', function(done) {
+      // No OAuth interceptor: a refresh here would fail the lookup.
+      nock(BB_API)
+        .get('/2.0/repositories/zanchin/testrepo/refs/branches?pagelen=100')
+        .reply(200, {values: [{name: 'main', target: {hash: 'abc123'}}]});
+
+      var query = {token: 'stored-access-token', refreshToken: 'stored-refresh-token', project_id: 'proj-1'};
+
+      callController(makeHandler(), 'branchesController', {owner: 'zanchin', repo: 'testrepo'}, query, function(status, body) {
+        status.should.equal(200);
+        body.should.eql([{name: 'main', sha: 'abc123'}]);
+        done();
+      });
+    });
+
+    it('writes a refresh made for a lookup back to the project it names', function(done) {
+      nock(BB_API)
+        .get('/2.0/repositories/zanchin/testrepo/pullrequests/7')
+        .reply(401, EXPIRED_BODY)
+        .get('/2.0/repositories/zanchin/testrepo/pullrequests/7')
+        .reply(200, {state: 'OPEN', title: 'A pull request', author: {username: 'zanchin', uuid: '{1}'}});
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      var persisted = null;
+      nock(COORDINATOR)
+        .post('/projects/tokens')
+        .reply(200, function() {
+          persisted = this.req.headers;
+          return {ok: true};
+        });
+
+      var params = {owner: 'zanchin', repo: 'testrepo', pullRequestNumber: '7'};
+      var query = {token: 'expired-token', refreshToken: 'stored-refresh-token', project_id: 'proj-1'};
+
+      callController(makeHandler(), 'pullRequestController', params, query, function(status, body) {
+        status.should.equal(200);
+        body.state.should.equal('open');
+
+        // Without the write-back the coordinator would keep the refresh token
+        // Bitbucket just invalidated.
+        setTimeout(function() {
+          should.exist(persisted);
+          persisted.projectid.should.equal('proj-1');
+          persisted.token.should.equal('new-access-token');
+          persisted.refreshtoken.should.equal('rotated-refresh-token');
+          persisted.previousrefreshtoken.should.equal('stored-refresh-token');
+          done();
+        }, 50);
+      });
+    });
   });
 });
