@@ -298,6 +298,49 @@ describe('token refresh', function() {
       });
     });
 
+    // What Bitbucket sends for an expired token since its 2026 OAuth changes;
+    // none of it matches isTokenError, so only the 401 says to refresh.
+    it('refreshes and retries on a 401 whatever the message says', function(done) {
+      var api = makeApi();
+
+      nock(BB_API)
+        .get('/2.0/repositories/owner/repo/refs/branches?pagelen=100')
+        .reply(401, {type: 'error', error: {message: 'Token is invalid, expired, or not supported for this endpoint.'}});
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token'});
+
+      var retry = nock(BB_API, {
+        reqheaders: {authorization: 'Bearer new-access-token'},
+      })
+        .get('/2.0/repositories/owner/repo/refs/branches?pagelen=100')
+        .reply(200, {values: [{name: 'main', target: {hash: 'abc123'}}]});
+
+      api.repos.getBranches({owner: 'owner', repo: 'repo'}, function(err, branches) {
+        should.not.exist(err);
+        branches.should.eql([{name: 'main', sha: 'abc123'}]);
+        retry.isDone().should.equal(true);
+        api.auth.refreshToken.should.equal('rotated-refresh-token');
+        done();
+      });
+    });
+
+    it('does not refresh on errors other than a 401', function(done) {
+      var api = makeApi();
+
+      nock(BB_API)
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(404, {type: 'error', error: {message: 'Repository not found'}});
+
+      // nock.disableNetConnect() fails the test if a refresh is attempted.
+      api.http({path: '/repositories/owner/repo/src'}, function(err) {
+        should.exist(err);
+        err.statusCode.should.equal(404);
+        done();
+      });
+    });
+
     it('gives up when the refresh itself fails', function(done) {
       var api = makeApi();
 
