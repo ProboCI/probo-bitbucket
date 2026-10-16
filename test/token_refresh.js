@@ -16,6 +16,22 @@ var EXPIRED_BODY = {
   error: {message: 'OAuth2 access token expired. Use your refresh token to obtain a new access token.'},
 };
 
+// What Bitbucket sends for an expired token since its 2026 OAuth changes.
+var INVALID_BODY = {
+  type: 'error',
+  error: {message: 'Token is invalid, expired, or not supported for this endpoint.'},
+};
+
+var prPayload = require('./pullrequest_payload.json');
+
+// nock body matcher for a refresh of one particular refresh token.
+function refreshOf(refreshToken) {
+  return function(form) {
+    var sent = typeof form === 'string' ? require('querystring').parse(form).refresh_token : form.refresh_token;
+    return sent === refreshToken;
+  };
+}
+
 var log = {
   child: function() { return log; },
   info: function() {},
@@ -153,6 +169,65 @@ describe('token refresh', function() {
       });
     });
 
+    it('treats a refresh token Bitbucket does not recognize as needing re-authorization', function() {
+      BitbucketApi.isDeadRefreshToken({error: 'invalid_request', error_description: 'Invalid refresh_token'})
+        .should.equal(true);
+      BitbucketApi.isDeadRefreshToken({error: 'unauthorized_client', error_description: 'refresh_token is invalid'})
+        .should.equal(true);
+      BitbucketApi.isDeadRefreshToken({error: 'invalid_request', error_description: 'Missing grant_type'})
+        .should.equal(false);
+    });
+
+    it('asks Bitbucket with a timeout so a silent endpoint cannot wedge the chain', function(done) {
+      // This nock is too old to emulate socket timeouts, so check the option
+      // on the way out instead.
+      var request = require('request');
+      var originalPost = request.post;
+      var sent = null;
+      request.post = function(options, cb) {
+        sent = options;
+        return originalPost.call(request, options, cb);
+      };
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token'});
+
+      makeApi({refreshTimeoutMs: 1234}).refreshToken(function(err) {
+        request.post = originalPost;
+        should.not.exist(err);
+        sent.timeout.should.equal(1234);
+        done();
+      });
+    });
+
+    it('fails instead of hanging when Bitbucket does not answer', function(done) {
+      var api = makeApi();
+      var timeout = new Error('ESOCKETTIMEDOUT');
+      timeout.code = 'ESOCKETTIMEDOUT';
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .replyWithError(timeout);
+
+      api.refreshToken(function(err) {
+        should.exist(err);
+        err.message.should.match(/no answer from Bitbucket/);
+        err.reauthorize.should.equal(false);
+
+        // The failed attempt must not leave later refreshes waiting on it.
+        nock(BB_OAUTH)
+          .post('/site/oauth2/access_token')
+          .reply(200, {access_token: 'new-access-token'});
+
+        makeApi().refreshToken(function(err2, body) {
+          should.not.exist(err2);
+          body.access_token.should.equal('new-access-token');
+          done();
+        });
+      });
+    });
+
     it('errors without a refresh token rather than asking Bitbucket', function(done) {
       var api = makeApi({auth: {token: 'old-access-token', consumerKey: 'key', consumerSecret: 'secret'}});
 
@@ -262,6 +337,12 @@ describe('token refresh', function() {
         .should.equal(true);
     });
 
+    it('recognizes the wording Bitbucket uses since its 2026 OAuth changes', function() {
+      var api = makeApi();
+
+      api.isTokenError(INVALID_BODY).should.equal(true);
+    });
+
     it('does not treat unrelated errors as token expiry', function() {
       var api = makeApi();
 
@@ -337,6 +418,115 @@ describe('token refresh', function() {
       api.http({path: '/repositories/owner/repo/src'}, function(err) {
         should.exist(err);
         err.statusCode.should.equal(404);
+        done();
+      });
+    });
+
+    it('refreshes before the first request when the stored token is known to have expired', function(done) {
+      var api = makeApi({auth: {
+        token: 'expired-token',
+        refreshToken: 'stored-refresh-token',
+        tokenCreatedAt: Math.floor(Date.now() / 1000) - 8000,
+        tokenExpiresIn: 7200,
+        consumerKey: 'key',
+        consumerSecret: 'secret',
+      }});
+
+      // No interceptor accepts the expired token: sending it fails the test.
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      nock(BB_API, {reqheaders: {authorization: 'Bearer new-access-token'}})
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(200, {values: []});
+
+      api.http({path: '/repositories/owner/repo/src'}, function(err, res, body) {
+        should.not.exist(err);
+        body.values.should.eql([]);
+        api.isAccessTokenExpired().should.equal(false);
+        done();
+      });
+    });
+
+    it('refreshes on a token error whatever the status code', function(done) {
+      var api = makeApi();
+
+      nock(BB_API)
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(403, INVALID_BODY);
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token'});
+
+      var retry = nock(BB_API, {reqheaders: {authorization: 'Bearer new-access-token'}})
+        .get('/2.0/repositories/owner/repo/src')
+        .reply(200, {values: []});
+
+      api.http({path: '/repositories/owner/repo/src'}, function(err) {
+        should.not.exist(err);
+        retry.isDone().should.equal(true);
+        done();
+      });
+    });
+
+    it('refreshes against Bitbucket when a remembered token is rejected', function(done) {
+      // An earlier client in this process already rotated the stored token.
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token', refreshOf('stored-refresh-token'))
+        .reply(200, {access_token: 'remembered-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      makeApi().refreshToken(function(err) {
+        should.not.exist(err);
+
+        // A later client still holds the pair from the database. Its token is
+        // rejected, so is the remembered one (revoked in the meantime), and
+        // only a real refresh with the newest refresh token gets through.
+        var api = makeApi();
+
+        nock(BB_API, {reqheaders: {authorization: 'Bearer old-access-token'}})
+          .get('/2.0/repositories/owner/repo/src')
+          .reply(401, INVALID_BODY);
+        nock(BB_API, {reqheaders: {authorization: 'Bearer remembered-access-token'}})
+          .get('/2.0/repositories/owner/repo/src')
+          .reply(401, INVALID_BODY);
+
+        var forced = nock(BB_OAUTH)
+          .post('/site/oauth2/access_token', refreshOf('rotated-refresh-token'))
+          .reply(200, {access_token: 'fresh-access-token', refresh_token: 'newest-refresh-token', expires_in: 7200});
+
+        var retry = nock(BB_API, {reqheaders: {authorization: 'Bearer fresh-access-token'}})
+          .get('/2.0/repositories/owner/repo/src')
+          .reply(200, {values: []});
+
+        api.http({path: '/repositories/owner/repo/src'}, function(err, res, body) {
+          should.not.exist(err);
+          body.values.should.eql([]);
+          forced.isDone().should.equal(true);
+          retry.isDone().should.equal(true);
+          api.auth.refreshToken.should.equal('newest-refresh-token');
+          done();
+        });
+      });
+    });
+
+    it('does not loop when a freshly refreshed token is rejected too', function(done) {
+      var api = makeApi();
+
+      nock(BB_API)
+        .get('/2.0/repositories/owner/repo/src')
+        .times(2)
+        .reply(401, INVALID_BODY);
+
+      var refresh = nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token'});
+
+      api.http({path: '/repositories/owner/repo/src'}, function(err) {
+        should.exist(err);
+        err.statusCode.should.equal(401);
+        refresh.isDone().should.equal(true);
         done();
       });
     });
@@ -612,6 +802,9 @@ describe('token refresh', function() {
         json: function(status, body) {
           cb(status, body);
         },
+        send: function(status, body) {
+          cb(status, body);
+        },
       };
 
       handler[name](req, res, function() {});
@@ -664,6 +857,177 @@ describe('token refresh', function() {
           should.exist(persisted);
           persisted.projectid.should.equal('proj-1');
           persisted.token.should.equal('new-access-token');
+          persisted.refreshtoken.should.equal('rotated-refresh-token');
+          persisted.previousrefreshtoken.should.equal('stored-refresh-token');
+          done();
+        }, 50);
+      });
+    });
+
+    // The three places an expired token used to behave differently: the PR
+    // webhook, the project page's lookups and the build status post. All of
+    // them must refresh, retry and write back the same way.
+
+    it('builds a pull request after refreshing an expired token', function(done) {
+      var handler = makeHandler();
+      var sha = prPayload.pullrequest.source.commit.hash;
+
+      nock(COORDINATOR)
+        .get('/projects?service=bitbucket&slug=zanchin%2Ftest-repo&single=true')
+        .reply(200, {
+          id: 'proj-1',
+          owner: 'zanchin',
+          repo: 'test-repo',
+          slug: 'zanchin/test-repo',
+          service_auth: {token: 'expired-token', refreshToken: 'stored-refresh-token'},
+        });
+
+      // The stored token is rejected with Bitbucket's current wording, the
+      // refresh succeeds, and both config fetches go out with the new token.
+      nock(BB_API, {reqheaders: {authorization: 'Bearer expired-token'}})
+        .get('/2.0/repositories/zanchin/test-repo/src/' + sha + '/?pagelen=100')
+        .reply(401, INVALID_BODY);
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      nock(BB_API, {reqheaders: {authorization: 'Bearer new-access-token'}})
+        .get('/2.0/repositories/zanchin/test-repo/src/' + sha + '/?pagelen=100')
+        .reply(200, {values: [{path: '.probo.yml'}]})
+        .get('/2.0/repositories/zanchin/test-repo/src/' + sha + '/.probo.yml?pagelen=100')
+        .reply(200, 'steps:\n  - name: test\n', {'Content-Type': 'text/plain'});
+
+      // This nock hands the reply function the raw request body and sends an
+      // object reply without a content type, so parse and serialise by hand.
+      var submitted = null;
+      nock(COORDINATOR)
+        .post('/startbuild')
+        .reply(200, function(uri, body) {
+          submitted = typeof body === 'string' ? JSON.parse(body) : body;
+          return JSON.stringify({id: 'build-1'});
+        }, {'Content-Type': 'application/json'});
+
+      var persisted = null;
+      nock(COORDINATOR)
+        .post('/projects/tokens')
+        .reply(200, function() {
+          persisted = this.req.headers;
+          return {ok: true};
+        });
+
+      var event = {event: 'pullrequest:created', payload: prPayload, hookId: 'hook-1', host: 'bitbucket.org'};
+
+      handler.pullRequestHandler(event, function(err, build) {
+        should.not.exist(err);
+        build.id.should.equal('build-1');
+
+        // The build went to the coordinator with the refreshed credentials...
+        submitted.build.config.should.eql({steps: [{name: 'test'}]});
+        submitted.project.service_auth.token.should.equal('new-access-token');
+        submitted.project.service_auth.refreshToken.should.equal('rotated-refresh-token');
+
+        // ...and the rotation was written back for the next webhook.
+        setTimeout(function() {
+          should.exist(persisted);
+          persisted.projectid.should.equal('proj-1');
+          persisted.token.should.equal('new-access-token');
+          persisted.refreshtoken.should.equal('rotated-refresh-token');
+          persisted.previousrefreshtoken.should.equal('stored-refresh-token');
+          done();
+        }, 50);
+      });
+    });
+
+    it('serves the project page after refreshing an expired token', function(done) {
+      nock(BB_API, {reqheaders: {authorization: 'Bearer expired-token'}})
+        .get('/2.0/repositories/zanchin/testrepo/refs/branches?pagelen=100')
+        .reply(401, INVALID_BODY);
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      nock(BB_API, {reqheaders: {authorization: 'Bearer new-access-token'}})
+        .get('/2.0/repositories/zanchin/testrepo/refs/branches?pagelen=100')
+        .reply(200, {values: [{name: 'main', target: {hash: 'abc123'}}]});
+
+      var persisted = null;
+      nock(COORDINATOR)
+        .post('/projects/tokens')
+        .reply(200, function() {
+          persisted = this.req.headers;
+          return {ok: true};
+        });
+
+      var query = {token: 'expired-token', refreshToken: 'stored-refresh-token', project_id: 'proj-1'};
+
+      callController(makeHandler(), 'branchesController', {owner: 'zanchin', repo: 'testrepo'}, query, function(status, body) {
+        status.should.equal(200);
+        body.should.eql([{name: 'main', sha: 'abc123'}]);
+
+        setTimeout(function() {
+          should.exist(persisted);
+          persisted.projectid.should.equal('proj-1');
+          persisted.token.should.equal('new-access-token');
+          persisted.refreshtoken.should.equal('rotated-refresh-token');
+          done();
+        }, 50);
+      });
+    });
+
+    it('posts a build status after refreshing an expired token', function(done) {
+      var handler = makeHandler();
+      var project = makeProject();
+
+      nock(BB_API, {reqheaders: {authorization: 'Bearer expired-token'}})
+        .post('/2.0/repositories/zanchin/testrepo/commit/abc123/statuses/build')
+        .reply(401, INVALID_BODY);
+
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      nock(BB_API, {reqheaders: {authorization: 'Bearer new-access-token'}})
+        .post('/2.0/repositories/zanchin/testrepo/commit/abc123/statuses/build')
+        .reply(201, {state: 'SUCCESSFUL', key: 'ProboCI/env'});
+
+      nock(COORDINATOR)
+        .post('/projects/tokens')
+        .reply(200, {ok: true});
+
+      var status = {state: 'SUCCESSFUL', key: 'ProboCI/env', url: 'https://example.test/build/1', description: 'done'};
+
+      handler.postStatusToBitbucket(project, 'abc123', status, function(err, body) {
+        should.not.exist(err);
+        body.state.should.equal('SUCCESSFUL');
+        project.service_auth.token.should.equal('new-access-token');
+        done();
+      });
+    });
+
+    it('writes a lookup back when the caller names the project', function(done) {
+      nock(BB_OAUTH)
+        .post('/site/oauth2/access_token')
+        .reply(200, {access_token: 'new-access-token', refresh_token: 'rotated-refresh-token', expires_in: 7200});
+
+      var persisted = null;
+      nock(COORDINATOR)
+        .post('/projects/tokens')
+        .reply(200, function() {
+          persisted = this.req.headers;
+          return {ok: true};
+        });
+
+      var query = {refreshToken: 'stored-refresh-token', project_id: 'proj-1'};
+
+      callController(makeHandler(), 'authLookupController', {}, query, function(status, body) {
+        status.should.equal(200);
+        body.access_token.should.equal('new-access-token');
+
+        setTimeout(function() {
+          should.exist(persisted);
+          persisted.projectid.should.equal('proj-1');
           persisted.refreshtoken.should.equal('rotated-refresh-token');
           persisted.previousrefreshtoken.should.equal('stored-refresh-token');
           done();
